@@ -1,122 +1,297 @@
 import 'package:flutter/material.dart';
 
+import 'todo/todo.dart';
+import 'package:momentum/steps/steps.dart';
+import 'package:provider/provider.dart';
+import 'package:momentum/weather/weather_provider.dart';
+import 'package:momentum/todo/todo_provider.dart';
+import 'package:momentum/pomodoro/pomodoro_provider.dart';
+import 'package:momentum/steps/steps_provider.dart';
+
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => PomodoroProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Momentum',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const HomePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+class HomePage extends StatelessWidget {
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+    return DefaultTabController(
+      length: 4,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Momentum'),
+          bottom: const TabBar(
+            tabs: const [
+              Tab(icon: Icon(Icons.wb_sunny), text: 'Weather'),
+              Tab(icon: Icon(Icons.list), text: 'Todo'),
+              Tab(icon: Icon(Icons.timer), text: 'Pomodoro'),
+              Tab(icon: Icon(Icons.directions_walk), text: 'Steps'),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            ChangeNotifierProvider(
+              create: (context) => WeatherProvider(),
+              child: const WeatherTab(),
+            ),
+            ChangeNotifierProvider(
+              create: (context) => TodoProvider(),
+              child: const TodoTab(),
+            ),
+            const PomodoroTab(),
+            ChangeNotifierProvider(
+              create: (context) => StepsProvider(),
+              child: const StepsTab(),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+}
+
+class WeatherTab extends StatefulWidget {
+  const WeatherTab({Key? key}) : super(key: key);
+
+  @override
+  State<WeatherTab> createState() => _WeatherTabState();
+}
+
+class _WeatherTabState extends State<WeatherTab> {
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<WeatherProvider>(context, listen: false).fetchWeather();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final weatherProvider = Provider.of<WeatherProvider>(context);
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('Temperature: ${weatherProvider.temperature}'),
+          Text('Forecast: ${weatherProvider.forecast}'),
+          ElevatedButton(
+            onPressed: () {
+              Provider.of<WeatherProvider>(context, listen: false).fetchWeather();
+            },
+            child: const Text('Refresh'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class TodoTab extends StatefulWidget {
+  const TodoTab({Key? key}) : super(key: key);
+
+  @override
+  State<TodoTab> createState() => _TodoTabState();
+}
+
+class _TodoTabState extends State<TodoTab> {
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<TodoProvider>(context, listen: false).loadTasks();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final todoProvider = Provider.of<TodoProvider>(context);
+    return Scaffold(
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              itemCount: todoProvider.tasks.length,
+             itemBuilder: (context, index) {
+               final task = todoProvider.tasks[index];
+               return TodoItem(task: task,);
+             },
+           ),
+         ),
+         Padding(
+           padding: const EdgeInsets.all(8.0),
+           child: Row(
+             children: [
+               Expanded(
+                 child: TextField(
+                   decoration: const InputDecoration(hintText: 'Add task'),
+                   onSubmitted: (value) {
+                     todoProvider.addTask(value);
+                   },
+                 ),
+               ),
+               IconButton(
+                 icon: const Icon(Icons.add),
+                 onPressed: () {
+                   // TODO: Implement add task logic
+                 },
+               ),
+             ],
+           ),
+         ),
+       ],
+     ),
+   );
+ }
+}
+
+class TodoItem extends StatelessWidget {
+ final Todo task;
+
+ const TodoItem({
+   Key? key,
+   required this.task,
+ }) : super(key: key);
+
+ @override
+ Widget build(BuildContext context) {
+   final todoProvider = Provider.of<TodoProvider>(context, listen: false);
+   return ListTile(
+     title: Text(task.description),
+     leading: Checkbox(
+       value: task.isCompleted,
+       onChanged: (bool? value) {
+         todoProvider.toggleTask(task.id);
+       },
+     ),
+     trailing: IconButton(
+       icon: const Icon(Icons.delete),
+       onPressed: () {
+         todoProvider.removeTask(task.id);
+       },
+     ),
+   );
+ }
+}
+
+class PomodoroTab extends StatefulWidget {
+  const PomodoroTab({Key? key}) : super(key: key);
+
+  @override
+  State<PomodoroTab> createState() => _PomodoroTabState();
+}
+
+class _PomodoroTabState extends State<PomodoroTab> {
+  final _workTimeController = TextEditingController(text: '25');
+  final _breakTimeController = TextEditingController(text: '5');
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<PomodoroProvider>(context, listen: false).loadSettings();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final pomodoroProvider = Provider.of<PomodoroProvider>(context);
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('Current Time: ${pomodoroProvider.currentTime}'),
+          ElevatedButton(
+            onPressed: () {
+              if (pomodoroProvider.isRunning) {
+                pomodoroProvider.pauseTimer();
+              } else {
+                pomodoroProvider.startTimer();
+              }
+            },
+            child: Text(pomodoroProvider.isRunning ? 'Pause' : 'Start'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              pomodoroProvider.resetTimer();
+            },
+            child: const Text('Reset'),
+          ),
+          Text('Work Time: ${pomodoroProvider.workTime}'),
+          Text('Break Time: ${pomodoroProvider.breakTime}'),
+          ElevatedButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text('Set Pomodoro Settings'),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextFormField(
+                          controller: _workTimeController,
+                          decoration: const InputDecoration(labelText: 'Work Time (minutes)'),
+                          keyboardType: TextInputType.number,
+                        ),
+                        TextFormField(
+                          controller: _breakTimeController,
+                          decoration: const InputDecoration(labelText: 'Break Time (minutes)'),
+                          keyboardType: TextInputType.number,
+                        ),
+                      ],
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('Cancel'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          int workTime = int.tryParse(_workTimeController.text) ?? 25;
+                          int breakTime = int.tryParse(_breakTimeController.text) ?? 5;
+                          pomodoroProvider.setSettings(workTime, breakTime);
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('Save'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+            child: const Text('Set Settings'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class StepsTab extends StatelessWidget {
+  const StepsTab({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Steps();
   }
 }
