@@ -22,7 +22,7 @@ class PomodoroProvider extends ChangeNotifier {
         _currentTime--;
         notifyListeners();
       } else {
-        stopTimer();
+        resetTimer();
       }
     });
   }
@@ -40,18 +40,15 @@ class PomodoroProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void stopTimer() {
-    _isRunning = false;
-    _timer?.cancel();
-    _currentTime = _workTime * 60;
-    notifyListeners();
+  int getCurrentTime() {
+    return _currentTime;
   }
 
   Future<void> setSettings(int workTime, int breakTime) async {
     _workTime = workTime;
     _breakTime = breakTime;
     notifyListeners();
-    await _saveSettings();
+    await saveSettings();
     resetTimer();
   }
 
@@ -63,7 +60,7 @@ class PomodoroProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> _saveSettings() async {
+  Future<void> saveSettings() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('workTime', _workTime);
     await prefs.setInt('breakTime', _breakTime);

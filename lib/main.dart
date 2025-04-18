@@ -193,21 +193,13 @@ class TodoItem extends StatelessWidget {
  }
 }
 
-class PomodoroTab extends StatefulWidget {
+class PomodoroTab extends StatelessWidget {
   const PomodoroTab({Key? key}) : super(key: key);
 
-  @override
-  State<PomodoroTab> createState() => _PomodoroTabState();
-}
-
-class _PomodoroTabState extends State<PomodoroTab> {
-  final _workTimeController = TextEditingController(text: '25');
-  final _breakTimeController = TextEditingController(text: '5');
-
-  @override
-  void initState() {
-    super.initState();
-    Provider.of<PomodoroProvider>(context, listen: false).loadSettings();
+  String formatTime(int seconds) {
+    int minutes = (seconds / 60).floor();
+    int remainingSeconds = seconds % 60;
+    return '$minutes:${remainingSeconds.toString().padLeft(2, '0')}';
   }
 
   @override
@@ -217,7 +209,7 @@ class _PomodoroTabState extends State<PomodoroTab> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('Current Time: ${pomodoroProvider.currentTime}'),
+          Text('Current Time: ${formatTime(pomodoroProvider.currentTime)}'),
           ElevatedButton(
             onPressed: () {
               if (pomodoroProvider.isRunning) {
@@ -241,20 +233,28 @@ class _PomodoroTabState extends State<PomodoroTab> {
               showDialog(
                 context: context,
                 builder: (context) {
+                  int workTime = pomodoroProvider.workTime;
+                  int breakTime = pomodoroProvider.breakTime;
                   return AlertDialog(
                     title: const Text('Set Pomodoro Settings'),
                     content: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         TextFormField(
-                          controller: _workTimeController,
                           decoration: const InputDecoration(labelText: 'Work Time (minutes)'),
                           keyboardType: TextInputType.number,
+                          initialValue: pomodoroProvider.workTime.toString(),
+                          onChanged: (value) {
+                            workTime = int.tryParse(value) ?? pomodoroProvider.workTime;
+                          },
                         ),
                         TextFormField(
-                          controller: _breakTimeController,
                           decoration: const InputDecoration(labelText: 'Break Time (minutes)'),
                           keyboardType: TextInputType.number,
+                          initialValue: pomodoroProvider.breakTime.toString(),
+                          onChanged: (value) {
+                            breakTime = int.tryParse(value) ?? pomodoroProvider.breakTime;
+                          },
                         ),
                       ],
                     ),
@@ -267,8 +267,6 @@ class _PomodoroTabState extends State<PomodoroTab> {
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          int workTime = int.tryParse(_workTimeController.text) ?? 25;
-                          int breakTime = int.tryParse(_breakTimeController.text) ?? 5;
                           pomodoroProvider.setSettings(workTime, breakTime);
                           Navigator.of(context).pop();
                         },
