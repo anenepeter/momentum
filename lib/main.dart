@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'todo/task_input_modal.dart';
 
 import 'todo/todo.dart';
 import 'package:momentum/steps/steps.dart';
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -43,11 +44,11 @@ class HomePage extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Momentum'),
           bottom: const TabBar(
-            tabs: const [
-              Tab(icon: Icon(Icons.wb_sunny), text: 'Weather'),
-              Tab(icon: Icon(Icons.list), text: 'Todo'),
-              Tab(icon: Icon(Icons.timer), text: 'Pomodoro'),
-              Tab(icon: Icon(Icons.directions_walk), text: 'Steps'),
+            tabs: [
+              const Tab(icon: Icon(Icons.wb_sunny), text: 'Weather'),
+              const Tab(icon: Icon(Icons.list), text: 'Todo'),
+              const Tab(icon: Icon(Icons.timer), text: 'Pomodoro'),
+              const Tab(icon: Icon(Icons.directions_walk), text: 'Steps'),
             ],
           ),
         ),
@@ -74,7 +75,7 @@ class HomePage extends StatelessWidget {
 }
 
 class WeatherTab extends StatefulWidget {
-  const WeatherTab({Key? key}) : super(key: key);
+  const WeatherTab({super.key});
 
   @override
   State<WeatherTab> createState() => _WeatherTabState();
@@ -109,7 +110,7 @@ class _WeatherTabState extends State<WeatherTab> {
 }
 
 class TodoTab extends StatefulWidget {
-  const TodoTab({Key? key}) : super(key: key);
+  const TodoTab({super.key});
 
   @override
   State<TodoTab> createState() => _TodoTabState();
@@ -137,64 +138,106 @@ class _TodoTabState extends State<TodoTab> {
              },
            ),
          ),
-         Padding(
-           padding: const EdgeInsets.all(8.0),
-           child: Row(
-             children: [
-               Expanded(
-                 child: TextField(
-                   decoration: const InputDecoration(hintText: 'Add task'),
-                   onSubmitted: (value) {
-                     todoProvider.addTask(value);
-                   },
-                 ),
-               ),
-               IconButton(
-                 icon: const Icon(Icons.add),
-                 onPressed: () {
-                   // TODO: Implement add task logic
-                 },
-               ),
-             ],
-           ),
+         ElevatedButton(
+           onPressed: () {
+             todoProvider.clearCompletedTasks();
+           },
+           child: const Text('Clear Completed'),
          ),
        ],
      ),
-   );
- }
+     floatingActionButton: FloatingActionButton(
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return TaskInputModal(onTaskSaved: (String task) {
+              todoProvider.addTask(task);
+            });
+          },
+        );
+      },
+      child: const Icon(Icons.add),
+    ),
+  );
+}
 }
 
 class TodoItem extends StatelessWidget {
- final Todo task;
+  final Todo task;
 
- const TodoItem({
-   Key? key,
-   required this.task,
- }) : super(key: key);
+  const TodoItem({
+    super.key,
+    required this.task,
+  });
 
- @override
- Widget build(BuildContext context) {
-   final todoProvider = Provider.of<TodoProvider>(context, listen: false);
-   return ListTile(
-     title: Text(task.description),
-     leading: Checkbox(
-       value: task.isCompleted,
-       onChanged: (bool? value) {
-         todoProvider.toggleTask(task.id);
-       },
-     ),
-     trailing: IconButton(
-       icon: const Icon(Icons.delete),
-       onPressed: () {
-         todoProvider.removeTask(task.id);
-       },
-     ),
-   );
- }
+  @override
+  Widget build(BuildContext context) {
+    final todoProvider = Provider.of<TodoProvider>(context, listen: false);
+
+    return Dismissible(
+      key: Key(task.id),
+      background: Container(
+        color: Colors.red,
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: 20.0),
+        child: const Icon(Icons.delete, color: Colors.white),
+      ),
+      onDismissed: (direction) {
+        todoProvider.removeTask(task.id);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${task.description} dismissed')),
+        );
+      },
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListTile(
+            title: Text(
+              task.description,
+              style: TextStyle(
+                decoration: task.isCompleted
+                    ? TextDecoration.lineThrough
+                    : TextDecoration.none,
+              ),
+            ),
+            leading: Checkbox(
+              value: task.isCompleted,
+              onChanged: (bool? value) {
+                todoProvider.toggleTask(task.id);
+              },
+              activeColor: Theme.of(context).primaryColor,
+            ),
+            trailing: IconButton(
+              icon: const Icon(Icons.delete),
+              onPressed: () {
+                todoProvider.removeTask(task.id);
+              },
+            ),
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return TaskInputModal(
+                    task: task,
+                    onTaskSaved: (String updatedTask) {
+                      if (updatedTask.isNotEmpty) {
+                        todoProvider.editTask(task.id, updatedTask);
+                      }
+                    },
+                  );
+                },
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class PomodoroTab extends StatelessWidget {
-  const PomodoroTab({Key? key}) : super(key: key);
+  const PomodoroTab({super.key});
 
   String formatTime(int seconds) {
     int minutes = (seconds / 60).floor();
@@ -286,7 +329,7 @@ class PomodoroTab extends StatelessWidget {
 }
 
 class StepsTab extends StatelessWidget {
-  const StepsTab({Key? key}) : super(key: key);
+  const StepsTab({super.key});
 
   @override
   Widget build(BuildContext context) {

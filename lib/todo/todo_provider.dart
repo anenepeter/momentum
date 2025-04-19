@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uuid/uuid.dart';
 
 import 'todo.dart';
 import 'todo_storage_service.dart';
@@ -50,5 +49,11 @@ class TodoProvider extends ChangeNotifier {
   Future<void> clearTasks() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('tasks');
+  }
+
+  Future<void> clearCompletedTasks() async {
+    _tasks.removeWhere((task) => task.isCompleted);
+    notifyListeners();
+    await _todoStorageService.saveTasks(_tasks);
   }
 }

@@ -15,7 +15,7 @@ class WeatherProvider extends ChangeNotifier {
       Position position = await _determinePosition();
       final weatherData = await _weatherService.getWeatherData(position.latitude, position.longitude);
 
-      _temperature = weatherData['current']['temperature_2m'].toString() + '°C';
+      _temperature = '${weatherData['current']['temperature_2m']}°C';
       _forecast = 'Chance of rain: ${weatherData['current']['precipitation_probability']}%';
     } catch (e) {
       _temperature = 'Error';

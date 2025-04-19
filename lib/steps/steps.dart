@@ -5,6 +5,8 @@ import 'package:pedometer/pedometer.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class Steps extends StatefulWidget {
+  const Steps({super.key});
+
   @override
   _StepsState createState() => _StepsState();
 }
@@ -67,7 +69,7 @@ class _StepsState extends State<Steps> {
     }
 
     _pedestrianStatusStream = Pedometer.pedestrianStatusStream;
-    (await _pedestrianStatusStream.listen(onPedestrianStatusChanged))
+    (_pedestrianStatusStream.listen(onPedestrianStatusChanged))
         .onError(onPedestrianStatusError);
 
     _stepCountStream = Pedometer.stepCountStream;
