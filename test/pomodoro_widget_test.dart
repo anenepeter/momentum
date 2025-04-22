@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart'; // Import Riverpod
 import 'package:momentum/main.dart'; // Assuming MyApp and HomePage are in main.dart
-import 'package:momentum/pomodoro/pomodoro_provider.dart'; // Import your PomodoroProvider
+import 'package:momentum/pomodoro/pomodoro_notifier.dart'; // Import your PomodoroNotifier
 
 void main() {
   testWidgets('PomodoroTab displays initial time and controls', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(
-      ChangeNotifierProvider(
-        create: (context) => PomodoroProvider(),
-        child: const MyApp(), // Wrap with MyApp to get MaterialApp and other providers if needed
+      const ProviderScope(
+        child: MyApp(), // Wrap with MyApp to get MaterialApp and other providers if needed
       ),
     );
 
@@ -30,9 +29,8 @@ void main() {
 
   testWidgets('PomodoroTab starts and pauses timer', (WidgetTester tester) async {
     await tester.pumpWidget(
-      ChangeNotifierProvider(
-        create: (context) => PomodoroProvider(),
-        child: const MyApp(),
+      const ProviderScope(
+        child: MyApp(),
       ),
     );
 
@@ -62,9 +60,8 @@ void main() {
 
   testWidgets('PomodoroTab resets timer', (WidgetTester tester) async {
     await tester.pumpWidget(
-      ChangeNotifierProvider(
-        create: (context) => PomodoroProvider(),
-        child: const MyApp(),
+      const ProviderScope(
+        child: MyApp(),
       ),
     );
 
@@ -86,9 +83,8 @@ void main() {
 
   testWidgets('PomodoroTab settings dialog opens and saves', (WidgetTester tester) async {
     await tester.pumpWidget(
-      ChangeNotifierProvider(
-        create: (context) => PomodoroProvider(),
-        child: const MyApp(),
+      const ProviderScope(
+        child: MyApp(),
       ),
     );
 
@@ -117,9 +113,8 @@ void main() {
 
    testWidgets('PomodoroTab settings dialog input validation', (WidgetTester tester) async {
     await tester.pumpWidget(
-      ChangeNotifierProvider(
-        create: (context) => PomodoroProvider(),
-        child: const MyApp(),
+      const ProviderScope(
+        child: MyApp(),
       ),
     );
 

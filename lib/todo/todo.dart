@@ -16,6 +16,18 @@ class Todo {
     this.isCompleted = false,
   }) : id = const Uuid().v4();
 
+  // Add copyWith method
+  Todo copyWith({
+    String? description,
+    bool? isCompleted,
+  }) {
+    return Todo(
+      id: id,
+      description: description ?? this.description,
+      isCompleted: isCompleted ?? this.isCompleted,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,
