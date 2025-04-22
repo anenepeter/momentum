@@ -55,7 +55,7 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
                   if (weatherState.isLoading)
                     const CircularProgressIndicator()
                   else if (weatherState.error != null)
-                    Text('Error: ${weatherState.error}', style: const TextStyle(fontSize: 14.0, color: Colors.red))
+                    Text('Error: ${weatherState.error}', style: TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.error))
                   else
                     Column(
                       children: [
@@ -129,8 +129,8 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
                     // Progress bar
                     LinearProgressIndicator(
                       value: stepsState.goal > 0 ? stepsState.steps / stepsState.goal : 0.0, // Calculate progress
-                      backgroundColor: Colors.grey[300],
-                      valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                      backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+                      valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.primary),
                     ),
                   ],
                 ),

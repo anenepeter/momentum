@@ -18,7 +18,7 @@ class TodoView extends ConsumerWidget {
     }
 
     if (todoState.error != null) {
-      return Center(child: Text('Error: ${todoState.error}'));
+      return Center(child: Text('Error: ${todoState.error}', style: TextStyle(color: Theme.of(context).colorScheme.error)));
     }
 
     return Scaffold(
@@ -77,15 +77,15 @@ class TodoItem extends ConsumerWidget {
     return Dismissible(
       key: Key(task.id),
       background: Container(
-        color: Colors.red,
+        color: Theme.of(context).colorScheme.error,
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 20.0),
-        child: const Icon(Icons.delete, color: Colors.white),
+        child: Icon(Icons.delete, color: Theme.of(context).colorScheme.onError),
       ),
       onDismissed: (direction) {
         todoNotifier.removeTask(task.id);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${task.description} dismissed')),
+          SnackBar(content: Text('${task.description} dismissed', style: TextStyle(color: Theme.of(context).colorScheme.onPrimary))),
         );
       },
       child: Card(
@@ -108,7 +108,7 @@ class TodoItem extends ConsumerWidget {
               activeColor: Theme.of(context).primaryColor,
             ),
             trailing: IconButton(
-              icon: const Icon(Icons.delete),
+              icon: Icon(Icons.delete, color: Theme.of(context).colorScheme.onSurface),
               onPressed: () {
                 todoNotifier.removeTask(task.id);
               },
