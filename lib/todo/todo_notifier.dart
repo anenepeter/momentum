@@ -93,6 +93,13 @@ class TodoNotifier extends StateNotifier<TodoState> {
     state = state.copyWith(tasks: updatedTasks);
     await _todoStorageService.saveTasks(updatedTasks);
   }
+  int get completedTaskCount {
+    return state.tasks.where((task) => task.isCompleted).length;
+  }
+
+  int get incompleteTaskCount {
+    return state.tasks.where((task) => !task.isCompleted).length;
+  }
 }
 
 // Define the Riverpod provider for the TodoStorageService

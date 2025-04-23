@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:momentum/weather/weather_notifier.dart';
 import 'package:momentum/pomodoro/pomodoro_notifier.dart';
 import 'package:momentum/steps/steps_notifier.dart';
+import 'package:momentum/todo/todo_notifier.dart';
 
 class DashboardView extends ConsumerStatefulWidget {
   const DashboardView({Key? key}) : super(key: key);
@@ -24,6 +25,7 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
     final weatherState = ref.watch(weatherProvider);
     final pomodoroState = ref.watch(pomodoroProvider);
     final stepsState = ref.watch(stepsProvider);
+    final todoState = ref.watch(todoProvider);
 
     String formatTime(int seconds) {
       final minutes = (seconds ~/ 60).toString().padLeft(2, '0');
@@ -134,6 +136,20 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
               ),
             ),
             // Add more dashboard items here
+            // Todo Summary Card
+            Card(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const Icon(Icons.list, size: 50.0),
+                  const SizedBox(height: 8.0),
+                  const Text('Todo Summary', style: TextStyle(fontSize: 18.0)),
+                  const SizedBox(height: 4.0),
+                  Text('Completed: ${ref.watch(todoProvider.notifier).completedTaskCount}', style: const TextStyle(fontSize: 14.0)),
+                  Text('Undone: ${ref.watch(todoProvider.notifier).incompleteTaskCount}', style: const TextStyle(fontSize: 14.0)),
+                ],
+              ),
+            ),
           ],
         ),
       ),
