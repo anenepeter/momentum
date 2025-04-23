@@ -54,11 +54,19 @@ class WeatherNotifier extends StateNotifier<WeatherState> {
         isLoading: false,
       );
     } catch (e) {
+      String errorMessage;
+      if (e is LocationServiceDisabledException) {
+        errorMessage = 'Location services disabled.';
+      } else if (e is PermissionDeniedException) {
+        errorMessage = 'Location permissions denied.';
+      } else {
+        errorMessage = 'Failed to fetch weather.';
+      }
       state = state.copyWith(
         temperature: 'Error',
-        forecast: e.toString(),
+        forecast: errorMessage, // Display the short error message in forecast
         isLoading: false,
-        error: e.toString(),
+        error: errorMessage, // Store the short error message in error state
       );
     }
   }
