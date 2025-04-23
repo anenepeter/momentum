@@ -44,7 +44,7 @@ class StepsNotifier extends StateNotifier<StepsState> {
   int _dailyStartSteps = 0;
   DateTime? _dailyStartDate;
 
-  StepsNotifier() : super(StepsState(steps: 0, goal: 10000, isListening: false)) {
+  StepsNotifier() : super(StepsState(steps: 0, goal: 500, isListening: false)) {
     loadData();
   }
 
@@ -121,7 +121,7 @@ class StepsNotifier extends StateNotifier<StepsState> {
 
   Future<void> _loadGoal() async {
     final prefs = await SharedPreferences.getInstance();
-    final goal = prefs.getInt(_goalKey) ?? 10000;
+    final goal = prefs.getInt(_goalKey) ?? 500;
     state = state.copyWith(goal: goal);
   }
 

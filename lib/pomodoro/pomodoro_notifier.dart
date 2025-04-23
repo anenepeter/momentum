@@ -113,9 +113,12 @@ class PomodoroNotifier extends StateNotifier<PomodoroState> {
     final prefs = await SharedPreferences.getInstance();
     final workTime = prefs.getInt('workTime') ?? 25;
     final breakTime = prefs.getInt('breakTime') ?? 5;
-    final currentTime = prefs.getInt('currentTime') ?? workTime * 60;
     final currentSession = prefs.getInt('currentSession') ?? 1;
 
+    // Always set currentTime based on the loaded workTime when loading settings
+    final currentTime = workTime * 60;
+
+    
     state = state.copyWith(
       workTime: workTime,
       breakTime: breakTime,
