@@ -1,20 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:momentum/theme/theme_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Import Riverpod
-import 'todo/task_input_modal.dart';
 
-import 'todo/todo.dart';
 // Import Riverpod notifiers
-import 'package:momentum/weather/weather_notifier.dart';
-import 'package:momentum/todo/todo_notifier.dart';
-import 'package:momentum/pomodoro/pomodoro_notifier.dart';
-import 'package:momentum/steps/steps_notifier.dart';
-import 'package:momentum/settings/settings_notifier.dart'; // Import new settings notifier
+// Import new settings notifier
 
 // Import view components (will be created/refactored)
-import 'package:momentum/weather/weather_view.dart';
-import 'package:momentum/pomodoro/pomodoro_view.dart';
-import 'package:momentum/steps/steps_view.dart';
 import 'package:momentum/todo/todo_view.dart';
 import 'package:momentum/settings/settings_view.dart';
 import 'package:momentum/dashboard/dashboard_view.dart'; // Import new dashboard view

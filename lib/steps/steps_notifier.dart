@@ -3,7 +3,6 @@ import 'package:pedometer/pedometer.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
-import 'package:intl/intl.dart'; // Import for date formatting
 
 // Define the state for the Steps module
 class StepsState {

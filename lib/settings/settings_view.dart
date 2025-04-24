@@ -116,12 +116,13 @@ class SettingsView extends ConsumerWidget {
     );
   }
 
-  Future<void> _showTimeSettingDialog(
-    BuildContext context,
-    String title,
-    int currentValue,
-    Function(int) onSave,
-  ) async {
+  Future<void> _showReusableNumberInputDialog({
+    required BuildContext context,
+    required String title,
+    required int currentValue,
+    required Function(int) onSave,
+    String? labelText,
+  }) async {
     final controller = TextEditingController(text: currentValue.toString());
     final formKey = GlobalKey<FormState>();
 
@@ -134,9 +135,9 @@ class SettingsView extends ConsumerWidget {
           child: TextFormField(
             controller: controller,
             keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
-              labelText: 'Minutes',
-              border: OutlineInputBorder(),
+            decoration: InputDecoration(
+              labelText: labelText,
+              border: const OutlineInputBorder(),
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -169,55 +170,32 @@ class SettingsView extends ConsumerWidget {
     );
   }
 
+  Future<void> _showTimeSettingDialog(
+    BuildContext context,
+    String title,
+    int currentValue,
+    Function(int) onSave,
+  ) async {
+    return _showReusableNumberInputDialog(
+      context: context,
+      title: title,
+      currentValue: currentValue,
+      onSave: onSave,
+      labelText: 'Minutes',
+    );
+  }
+
   Future<void> _showNumberInputDialog(
     BuildContext context,
     String title,
     int currentValue,
     Function(int) onSave,
   ) async {
-    final controller = TextEditingController(text: currentValue.toString());
-    final formKey = GlobalKey<FormState>();
-
-    return showDialog(
+    return _showReusableNumberInputDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(title),
-        content: Form(
-          key: formKey,
-          child: TextFormField(
-            controller: controller,
-            keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-            ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter a value';
-              }
-              final number = int.tryParse(value);
-              if (number == null || number <= 0) {
-                return 'Please enter a valid positive number';
-              }
-              return null;
-            },
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (formKey.currentState!.validate()) {
-                onSave(int.parse(controller.text));
-                Navigator.pop(context);
-              }
-            },
-            child: const Text('Save'),
-          ),
-        ],
-      ),
+      title: title,
+      currentValue: currentValue,
+      onSave: onSave,
     );
   }
 }
