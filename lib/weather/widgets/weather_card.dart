@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:momentum/weather/weather_notifier.dart';
 
 class WeatherCard extends ConsumerWidget {
-  const WeatherCard({Key? key}) : super(key: key);
+  const WeatherCard({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

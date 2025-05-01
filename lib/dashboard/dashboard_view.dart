@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:momentum/weather/weather_notifier.dart';
-import 'package:momentum/pomodoro/pomodoro_notifier.dart';
 import 'package:momentum/steps/steps_notifier.dart';
-import 'package:momentum/todo/todo_notifier.dart';
-import 'package:momentum/motivation/motivation_notifier.dart';
-import 'package:momentum/utils/format_utils.dart';
 
 import 'package:momentum/weather/widgets/weather_card.dart';
 import 'package:momentum/pomodoro/widgets/pomodoro_card.dart';
@@ -14,7 +9,7 @@ import 'package:momentum/todo/widgets/todo_summary_card.dart';
 import 'package:momentum/motivation/widgets/motivational_message_widget.dart';
 
 class DashboardView extends ConsumerStatefulWidget {
-  const DashboardView({Key? key}) : super(key: key);
+  const DashboardView({super.key});
 
   @override
   ConsumerState<DashboardView> createState() => _DashboardViewState();
@@ -55,7 +50,12 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
               ),
             ),
           ),
-          const MotivationalMessageWidget(),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: const MotivationalMessageWidget(),
+            ),
+          ),
         ],
       ),
     );

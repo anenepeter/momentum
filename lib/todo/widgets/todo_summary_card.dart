@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:momentum/todo/todo_notifier.dart';
 
 class TodoSummaryCard extends ConsumerWidget {
-  const TodoSummaryCard({Key? key}) : super(key: key);
+  const TodoSummaryCard({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

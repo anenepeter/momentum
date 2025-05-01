@@ -4,7 +4,7 @@ import 'package:momentum/pomodoro/pomodoro_notifier.dart';
 import 'package:momentum/utils/format_utils.dart';
 
 class PomodoroCard extends ConsumerWidget {
-  const PomodoroCard({Key? key}) : super(key: key);
+  const PomodoroCard({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

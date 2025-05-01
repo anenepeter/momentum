@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:momentum/steps/steps_notifier.dart';
 
 class StepsGoalDialog extends ConsumerStatefulWidget {
-  const StepsGoalDialog({Key? key}) : super(key: key);
+  const StepsGoalDialog({super.key});
 
   @override
   _StepsGoalDialogState createState() => _StepsGoalDialogState();

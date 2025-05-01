@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:momentum/steps/steps_notifier.dart';
 
 class StepsCard extends ConsumerWidget {
-  const StepsCard({Key? key}) : super(key: key);
+  const StepsCard({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -34,7 +34,7 @@ class StepsCard extends ConsumerWidget {
             // Progress bar
             LinearProgressIndicator(
               value: stepsState.goal > 0 ? stepsState.steps / stepsState.goal : 0.0, // Calculate progress
-              backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+              backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
               valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.primary),
             ),
           ],

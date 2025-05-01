@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:momentum/motivation/motivation_notifier.dart';
 
 class MotivationalMessageWidget extends ConsumerWidget {
-  const MotivationalMessageWidget({Key? key}) : super(key: key);
+  const MotivationalMessageWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
